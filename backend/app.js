@@ -1,6 +1,7 @@
 import express from 'express';
 import axios from 'axios';
 import dotenv from 'dotenv';
+import getSymptoms from "./services/symptoms.js";
 
 dotenv.config(); // Load environment variables from .env file
 
@@ -8,6 +9,15 @@ const app = express();
 const port = 3080;
 
 app.use(express.json());
+
+app.get('/symptoms', function(req, res, next) {
+    try {
+      res.json(getSymptoms(req.query.page));
+    } catch(err) {
+      console.error(`Error while getting symptoms `, err.message);
+      next(err);
+    }
+  });
 
 app.post('/chat', async (req, res) => {
     const userMessage = req.body.message;
